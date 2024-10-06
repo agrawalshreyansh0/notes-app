@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/notes_django:latest  # Replace with your Docker Hub username and repository
+          tags: ${{ secrets.DOCKER_USERNAME }}/notes_django:${{ github.sha }}  # Replace with your Docker Hub username and repository
 
       # Optionally, Step 5: Post-run cleanup
       - name: Cleanup Docker images
