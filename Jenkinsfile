@@ -4,6 +4,9 @@ pipeline {
     environment {
         VIRTUALENV = 'venv'
         PIP_REQUIREMENTS = 'requirements.txt'
+        DOCKER_IMAGE = 'shreyanshagrawal0/notes-django'  // Replace with your DockerHub repo
+        DOCKER_TAG = "${GIT_COMMIT}"  // Use commit hash as the Docker tag
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // Jenkins credentials ID for DockerHub
     }
 
     stages {
@@ -57,12 +60,29 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Deploying...'
-                // Add your deployment steps here
+                echo 'Building Docker image...'
+                script {
+                    def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                    docker.build("${DOCKER_IMAGE}:${commitHash}")
+                }
             }
         }
+
+        // stage('Push Docker Image') {
+        //     steps {
+        //         echo 'Pushing Docker image to registry...'
+        //         script {
+        //             withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+        //                 sh '''
+        //                     echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        //                     docker push $DOCKER_IMAGE:$DOCKER_TAG
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     post {
