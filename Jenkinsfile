@@ -74,8 +74,8 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to registry...'
                 script {
+                    def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
                         sh '''
                             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                             docker push $DOCKER_IMAGE:$commitHash
