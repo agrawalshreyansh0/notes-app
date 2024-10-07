@@ -60,15 +60,15 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                script {
-                    def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                    docker.build("${DOCKER_IMAGE}:${commitHash}")
-                }
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         echo 'Building Docker image...'
+        //         script {
+        //             def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        //             docker.build("${DOCKER_IMAGE}:${commitHash}")
+        //         }
+        //     }
+        // }
 
         // stage('Push Docker Image') {
         //     steps {
